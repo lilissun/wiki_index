@@ -31,13 +31,13 @@ public class Searcher {
             HttpSolrClient client = new HttpSolrClient.Builder(url).build();
             client.setParser(new XMLResponseParser());
 
-            Analyzer alpine = Indexer.getAnalyzer();
+            Analyzer alpine = Indexer.getAlpine();
             APTransformer toLower = ToLowerTransformer.getInstance();
             APFilter ngram = NGramFilter.of(2);
 
-//            String text = "Facebook";
+            String text = "Facebook";
 //            String text = "apple";
-            String text = "Chocolate Milk";
+//            String text = "chocolate milk";
 
             List<String> tokens = alpine.analyze(text).getTokens();
             if (tokens.size() == 0) {

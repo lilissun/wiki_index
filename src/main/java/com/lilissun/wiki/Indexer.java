@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 public class Indexer {
     private static final Logger _logger = LoggerFactory.getLogger(Indexer.class);
 
-    static Analyzer getAnalyzer() {
+    static Analyzer getAlpine() {
         List<Analyzer.Config> list = new ArrayList<>();
         list.add(Alpine.getDefaultForAlphabet(Alphabet.Type.LATIN).addPostOperations(Collections.singletonList(
                 Token.Operation.TransformOperation.of(Collections.singletonList(
@@ -60,7 +60,7 @@ public class Indexer {
             HttpSolrClient client = new HttpSolrClient.Builder(url).build();
             client.setParser(new XMLResponseParser());
 
-            Analyzer alpine = Indexer.getAnalyzer();
+            Analyzer alpine = Indexer.getAlpine();
             APTransformer toLower = ToLowerTransformer.getInstance();
 
             String filename = "data/enwiki-20190901-pages-articles-multistream-index.txt";
