@@ -1,27 +1,25 @@
 package com.lilissun.wiki;
 
-import com.apple.alpine.analyzer.Alpine;
-import com.apple.alpine.core.*;
+import com.apple.alpine.core.Analyzer;
+import com.apple.alpine.core.Text;
+import com.apple.alpine.core.Context;
 import com.apple.alpine.core.filter.APFilter;
 import com.apple.alpine.core.filter.NGramFilter;
 import com.apple.alpine.core.transformer.APTransformer;
 import com.apple.alpine.core.transformer.ToLowerTransformer;
-import com.apple.alpine.opennlp.OpenNLPStemmer;
-import opennlp.tools.stemmer.snowball.SnowballStemmer;
+
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.impl.XMLResponseParser;
-
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Searcher {
@@ -33,25 +31,7 @@ public class Searcher {
             HttpSolrClient client = new HttpSolrClient.Builder(url).build();
             client.setParser(new XMLResponseParser());
 
-            List<Analyzer.Config> list = new ArrayList<>();
-            list.add(Alpine.getDefaultForAlphabet(Alphabet.Type.LATIN).addPostOperations(Collections.singletonList(
-                    Token.Operation.TransformOperation.of(Collections.singletonList(
-                            OpenNLPStemmer.getSnowballStemmer(SnowballStemmer.ALGORITHM.ENGLISH)
-                    ))
-            )));
-            list.add(Alpine.getDefaultForAlphabet(Alphabet.Type.PUNCTUATION));
-            list.add(Alpine.getDefaultForAlphabet(Alphabet.Type.NUMBER));
-            list.add(Alpine.getDefaultForAlphabet(Alphabet.Type.HAN));
-            list.add(Alpine.getDefaultForAlphabet(Alphabet.Type.HIRAGANA));
-            list.add(Alpine.getDefaultForAlphabet(Alphabet.Type.KATAKANA));
-            list.add(Alpine.getDefaultForAlphabet(Alphabet.Type.HANGUL));
-            list.add(Alpine.getDefaultForAlphabet(Alphabet.Type.THAI));
-            list.add(Alpine.getDefaultForAlphabet(Alphabet.Type.ARABIC));
-            list.add(Alpine.getDefaultForAlphabet(Alphabet.Type.CYRILLIC));
-            list.add(Alpine.getDefaultForAlphabet(Alphabet.Type.MYANMAR));
-            list.add(Alpine.getDefaultForAlphabet(Alphabet.Type.HEBREW));
-            list.add(Alpine.getDefaultForAlphabet(Alphabet.Type.DEVANAGARI));
-            Analyzer alpine = Analyzer.under(list);
+            Analyzer alpine = Indexer.getAnalyzer();
             APTransformer toLower = ToLowerTransformer.getInstance();
             APFilter ngram = NGramFilter.of(2);
 
